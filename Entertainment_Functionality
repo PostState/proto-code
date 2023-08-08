@@ -1,0 +1,41 @@
+// app/app.go
+// ...
+
+// Транзакция для участия в геймификации
+type ParticipateGameTx struct {
+	Gamer sdk.AccAddress
+}
+
+func NewParticipateGameTx(gamer sdk.AccAddress) ParticipateGameTx {
+	return ParticipateGameTx{
+		Gamer: gamer,
+	}
+}
+
+func (tx ParticipateGameTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx ParticipateGameTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx ParticipateGameTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Gamer}
+}
+
+// Обработчик транзакции для участия в геймификации
+func handleParticipateGame(ctx sdk.Context, keeper game.Keeper, tx ParticipateGameTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Участие геймера в геймификации
+	err := keeper.ParticipateGame(ctx, tx.Gamer)
+	if err != nil {
+		return sdk.ErrInternal("unable to participate in game").Result()
+	}
+
+	return sdk.Result{}
+}
