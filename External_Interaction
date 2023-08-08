@@ -1,0 +1,43 @@
+// app/app.go
+// ...
+
+// Транзакция для создания комитета внешнего взаимодействия
+type CreateExternalCommitteeTx struct {
+	CommitteeName string
+	Members       []sdk.AccAddress
+}
+
+func NewCreateExternalCommitteeTx(name string, members []sdk.AccAddress) CreateExternalCommitteeTx {
+	return CreateExternalCommitteeTx{
+		CommitteeName: name,
+		Members:       members,
+	}
+}
+
+func (tx CreateExternalCommitteeTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx CreateExternalCommitteeTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx CreateExternalCommitteeTx) GetSigners() []sdk.AccAddress {
+	return tx.Members
+}
+
+// Обработчик транзакции для создания комитета внешнего взаимодействия
+func handleCreateExternalCommittee(ctx sdk.Context, keeper external.Keeper, tx CreateExternalCommitteeTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Создание комитета внешнего взаимодействия с помощью Keeper модуля внешнего взаимодействия
+	err := keeper.CreateExternalCommittee(ctx, tx.CommitteeName, tx.Members)
+	if err != nil {
+		return sdk.ErrInternal("unable to create external committee").Result()
+	}
+
+	return sdk.Result{}
+}
