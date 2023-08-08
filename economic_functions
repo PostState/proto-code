@@ -1,0 +1,90 @@
+// app/app.go
+package app
+
+import (
+	// Импорты
+
+	bank "github.com/cosmos/cosmos-sdk/x/bank"
+	// Другие модули Cosmos SDK
+)
+
+const (
+	// Символ для экономического токена
+	UnitDenom = "unit"
+)
+
+func NewPoststateApp() *MyApp {
+	// Инициализация космос приложения и модулей
+
+	// Инициализация модуля bank
+	bankKeeper := bank.NewBaseKeeper(
+		// Параметры для модуля bank
+	)
+
+	// Добавляем ваш модуль Poststate
+	poststateModule := poststate.NewModule( /* параметры вашего модуля */ )
+
+	// Регистрируем все модули
+	// ...
+
+	// Задаем маппер для работы с токенами в банковском модуле
+	bankKeeper.SetSupply(ctx, bank.NewSupply(
+		sdk.NewCoins(sdk.NewCoin(UnitDenom, sdk.NewInt(0))),
+	))
+
+	// ...
+
+	// Создаем экземпляр вашего приложения
+	myApp := &MyApp{
+		// ...
+		bankKeeper:    bankKeeper,
+		poststateKeeper: poststateKeeper,
+	}
+
+	// ...
+
+	return myApp
+}
+
+// Транзакция для перемещения токенов
+type TransferTokensTx struct {
+	From   sdk.AccAddress
+	To     sdk.AccAddress
+	Amount sdk.Coins
+}
+
+func NewTransferTokensTx(from sdk.AccAddress, to sdk.AccAddress, amount sdk.Coins) TransferTokensTx {
+	return TransferTokensTx{
+		From:   from,
+		To:     to,
+		Amount: amount,
+	}
+}
+
+func (tx TransferTokensTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx TransferTokensTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx TransferTokensTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.From}
+}
+
+// Обработчик транзакции
+func handleTransferTokens(ctx sdk.Context, keeper bank.Keeper, tx TransferTokensTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Перевод токенов между адресами с помощью Keeper банковского модуля
+	err := keeper.SendCoins(ctx, tx.From, tx.To, tx.Amount)
+	if err != nil {
+		return sdk.ErrInternal("unable to send coins").Result()
+	}
+
+	return sdk.Result{}
+}
