@@ -1,0 +1,41 @@
+// app/app.go
+// ...
+
+// Транзакция для участия в голосовании за губернатора
+type ParticipateGovernorTx struct {
+	Citizen sdk.AccAddress
+}
+
+func NewParticipateGovernorTx(citizen sdk.AccAddress) ParticipateGovernorTx {
+	return ParticipateGovernorTx{
+		Citizen: citizen,
+	}
+}
+
+func (tx ParticipateGovernorTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx ParticipateGovernorTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx ParticipateGovernorTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Citizen}
+}
+
+// Обработчик транзакции для участия в голосовании за губернатора
+func handleParticipateGovernor(ctx sdk.Context, keeper governance.Keeper, tx ParticipateGovernorTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Участие гражданина в голосовании за губернатора
+	err := keeper.ParticipateGovernor(ctx, tx.Citizen)
+	if err != nil {
+		return sdk.ErrInternal("unable to participate in governor voting").Result()
+	}
+
+	return sdk.Result{}
+}
