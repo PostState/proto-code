@@ -1,0 +1,43 @@
+// app/app.go
+// ...
+
+// Транзакция для инициирования разрешения спора через децентрализованный арбитражный суд
+type InitiateDisputeResolutionTx struct {
+	Initiator sdk.AccAddress
+	CounterParty sdk.AccAddress
+}
+
+func NewInitiateDisputeResolutionTx(initiator, counterParty sdk.AccAddress) InitiateDisputeResolutionTx {
+	return InitiateDisputeResolutionTx{
+		Initiator: initiator,
+		CounterParty: counterParty,
+	}
+}
+
+func (tx InitiateDisputeResolutionTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx InitiateDisputeResolutionTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx InitiateDisputeResolutionTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Initiator}
+}
+
+// Обработчик транзакции для инициирования разрешения спора
+func handleInitiateDisputeResolution(ctx sdk.Context, keeper arbitration.Keeper, tx InitiateDisputeResolutionTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Инициирование разрешения спора с помощью Keeper модуля арбитража
+	err := keeper.InitiateDisputeResolution(ctx, tx.Initiator, tx.CounterParty)
+	if err != nil {
+		return sdk.ErrInternal("unable to initiate dispute resolution").Result()
+	}
+
+	return sdk.Result{}
+}
