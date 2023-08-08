@@ -1,0 +1,41 @@
+// app/app.go
+// ...
+
+// Транзакция для определения статуса гражданина
+type SetCitizenStatusTx struct {
+	User sdk.AccAddress
+}
+
+func NewSetCitizenStatusTx(user sdk.AccAddress) SetCitizenStatusTx {
+	return SetCitizenStatusTx{
+		User: user,
+	}
+}
+
+func (tx SetCitizenStatusTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx SetCitizenStatusTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx SetCitizenStatusTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.User}
+}
+
+// Обработчик транзакции для определения статуса гражданина
+func handleSetCitizenStatus(ctx sdk.Context, keeper user.Keeper, tx SetCitizenStatusTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Определение статуса гражданина с помощью Keeper модуля пользователей
+	err := keeper.SetCitizenStatus(ctx, tx.User)
+	if err != nil {
+		return sdk.ErrInternal("unable to set citizen status").Result()
+	}
+
+	return sdk.Result{}
+}
