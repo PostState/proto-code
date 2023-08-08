@@ -1,0 +1,43 @@
+// app/app.go
+// ...
+
+// Транзакция для создания комитета
+type CreateCommitteeTx struct {
+	Creator sdk.AccAddress
+	Members []sdk.AccAddress
+}
+
+func NewCreateCommitteeTx(creator sdk.AccAddress, members []sdk.AccAddress) CreateCommitteeTx {
+	return CreateCommitteeTx{
+		Creator: creator,
+		Members: members,
+	}
+}
+
+func (tx CreateCommitteeTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx CreateCommitteeTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx CreateCommitteeTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Creator}
+}
+
+// Обработчик транзакции для создания комитета
+func handleCreateCommittee(ctx sdk.Context, keeper committee.Keeper, tx CreateCommitteeTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Создание комитета с помощью Keeper модуля комитетов
+	err := keeper.CreateCommittee(ctx, tx.Creator, tx.Members)
+	if err != nil {
+		return sdk.ErrInternal("unable to create committee").Result()
+	}
+
+	return sdk.Result{}
+}
