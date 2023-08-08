@@ -1,0 +1,79 @@
+// app/types/actors.go
+package types
+
+import (
+	"github.com/cosmos/cosmos-sdk/x/auth"
+	sdk "github.com/cosmos/cosmos-sdk/types"
+)
+
+// Citizen represents a citizen of the PostState
+type Citizen struct {
+	Address        sdk.AccAddress `json:"address"`
+	DigitalCitizen bool           `json:"digital_citizen"`
+}
+
+// User represents a user of the PostState
+type User struct {
+	Address sdk.AccAddress `json:"address"`
+}
+
+// Governor represents a governor in the PostState
+type Governor struct {
+	Address sdk.AccAddress `json:"address"`
+}
+
+// Validator represents a validator in the PostState
+type Validator struct {
+	Address sdk.AccAddress `json:"address"`
+}
+
+// Gamer represents a gamer in the PostState
+type Gamer struct {
+	Address sdk.AccAddress `json:"address"`
+}
+
+// AI represents an artificial intelligence entity in the PostState
+type AI struct {
+	ID string `json:"id"`
+}
+
+// AddActor is a utility function to add an actor to the state
+func AddActor(ctx sdk.Context, keeper ActorKeeper, actorType string, address sdk.AccAddress) {
+	switch actorType {
+	case "citizen":
+		keeper.AddCitizen(ctx, Citizen{Address: address})
+	case "user":
+		keeper.AddUser(ctx, User{Address: address})
+	case "governor":
+		keeper.AddGovernor(ctx, Governor{Address: address})
+	case "validator":
+		keeper.AddValidator(ctx, Validator{Address: address})
+	case "gamer":
+		keeper.AddGamer(ctx, Gamer{Address: address})
+	case "ai":
+		keeper.AddAI(ctx, AI{ID: address.String()})
+	}
+}
+
+// GetActorByAddress returns an actor by their address
+func GetActorByAddress(ctx sdk.Context, keeper ActorKeeper, address sdk.AccAddress) interface{} {
+	if keeper.IsCitizen(ctx, address) {
+		return keeper.GetCitizen(ctx, address)
+	}
+	if keeper.IsUser(ctx, address) {
+		return keeper.GetUser(ctx, address)
+	}
+	if keeper.IsGovernor(ctx, address) {
+		return keeper.GetGovernor(ctx, address)
+	}
+	if keeper.IsValidator(ctx, address) {
+		return keeper.GetValidator(ctx, address)
+	}
+	if keeper.IsGamer(ctx, address) {
+		return keeper.GetGamer(ctx, address)
+	}
+	if keeper.IsAI(ctx, address.String()) {
+		return keeper.GetAI(ctx, address.String())
+	}
+	return nil
+}
