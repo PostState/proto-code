@@ -1,0 +1,43 @@
+// app/app.go
+// ...
+
+// Транзакция для предоставления ликвидности в Liquidity Pools
+type ProvideLiquidityTx struct {
+	Provider sdk.AccAddress
+	Amount   sdk.Coin
+}
+
+func NewProvideLiquidityTx(provider sdk.AccAddress, amount sdk.Coin) ProvideLiquidityTx {
+	return ProvideLiquidityTx{
+		Provider: provider,
+		Amount:   amount,
+	}
+}
+
+func (tx ProvideLiquidityTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx ProvideLiquidityTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx ProvideLiquidityTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Provider}
+}
+
+// Обработчик транзакции для предоставления ликвидности в Liquidity Pools
+func handleProvideLiquidity(ctx sdk.Context, keeper liquiditypool.Keeper, tx ProvideLiquidityTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Перевод токенов в Liquidity Pools с помощью Keeper модуля ликвидности
+	err := keeper.AddLiquidity(ctx, tx.Provider, tx.Amount)
+	if err != nil {
+		return sdk.ErrInternal("unable to provide liquidity").Result()
+	}
+
+	return sdk.Result{}
+}
