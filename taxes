@@ -1,0 +1,63 @@
+// app/app.go
+// ...
+
+// Транзакция для обмена токенами и взимания налогов
+type ExchangeTokensTx struct {
+	Trader sdk.AccAddress
+	Amount sdk.Coins
+}
+
+func NewExchangeTokensTx(trader sdk.AccAddress, amount sdk.Coins) ExchangeTokensTx {
+	return ExchangeTokensTx{
+		Trader: trader,
+		Amount: amount,
+	}
+}
+
+func (tx ExchangeTokensTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx ExchangeTokensTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx ExchangeTokensTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Trader}
+}
+
+// Обработчик транзакции для обмена токенами и взимания налогов
+func handleExchangeTokens(ctx sdk.Context, keeper bank.Keeper, tx ExchangeTokensTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Рассчитываем налоги
+	totalTax := tx.Amount.Mul(sdk.NewDecWithPrec(5, 1)) // 0.5%
+
+	// Разделяем налоги на фонды
+	validatorTax := totalTax.Mul(sdk.NewDecWithPrec(2, 1))    // 0.2%
+	communityTax := totalTax.Mul(sdk.NewDecWithPrec(1, 1))    // 0.1%
+	unconditionalIncome := totalTax.Mul(sdk.NewDecWithPrec(2, 1)) // 0.2%
+
+	// Перевод налогов в соответствующие пулы (Validator Pool, Community Pool, Unconditional Income)
+	// ... (используйте методы Keeper модулей)
+
+	// Перевод токенов между адресами с помощью Keeper банковского модуля
+	err := keeper.SendCoins(ctx, tx.Trader, /* адрес Validator Pool */, validatorTax)
+	if err != nil {
+		return sdk.ErrInternal("unable to send validator tax").Result()
+	}
+
+	err = keeper.SendCoins(ctx, tx.Trader, /* адрес Community Pool */, communityTax)
+	if err != nil {
+		return sdk.ErrInternal("unable to send community tax").Result()
+	}
+
+	// Обновление Unconditional Income для торговца (только для граждан)
+	// ...
+
+	// Возвращаем результат
+	return sdk.Result{}
+}
