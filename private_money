@@ -1,0 +1,43 @@
+// app/app.go
+// ...
+
+// Транзакция для создания приватных токенов
+type CreatePrivateTokenTx struct {
+	Creator sdk.AccAddress
+	Symbol  string
+}
+
+func NewCreatePrivateTokenTx(creator sdk.AccAddress, symbol string) CreatePrivateTokenTx {
+	return CreatePrivateTokenTx{
+		Creator: creator,
+		Symbol:  symbol,
+	}
+}
+
+func (tx CreatePrivateTokenTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx CreatePrivateTokenTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx CreatePrivateTokenTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Creator}
+}
+
+// Обработчик транзакции для создания приватных токенов
+func handleCreatePrivateToken(ctx sdk.Context, keeper privatetoken.Keeper, tx CreatePrivateTokenTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Создаем приватный токен с помощью Keeper модуля приватных токенов
+	err := keeper.CreatePrivateToken(ctx, tx.Creator, tx.Symbol)
+	if err != nil {
+		return sdk.ErrInternal("unable to create private token").Result()
+	}
+
+	return sdk.Result{}
+}
