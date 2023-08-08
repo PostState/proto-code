@@ -1,0 +1,82 @@
+# Определение основного класса для блокчейна
+class Blockchain:
+    def __init__(self):
+        self.chain = []
+        self.transactions = []
+        self.create_block(proof=1, previous_hash='0')
+
+    def create_block(self, proof, previous_hash):
+        block = {
+            'index': len(self.chain) + 1,
+            'timestamp': time(),
+            'proof': proof,
+            'previous_hash': previous_hash,
+            'transactions': self.transactions
+        }
+        self.transactions = []
+        self.chain.append(block)
+        return block
+
+    def get_previous_block(self):
+        return self.chain[-1]
+
+    # Доказательство работы (Proof of Work)
+    def proof_of_work(self, previous_proof):
+        new_proof = 1
+        check_proof = False
+        while not check_proof:
+            hash_operation = hashlib.sha256(str(new_proof ** 2 - previous_proof ** 2).encode()).hexdigest()
+            if hash_operation[:4] == '0000':
+                check_proof = True
+            else:
+                new_proof += 1
+        return new_proof
+
+    # Добавление транзакции в пул транзакций
+    def add_transaction(self, sender, receiver, amount):
+        self.transactions.append({
+            'sender': sender,
+            'receiver': receiver,
+            'amount': amount
+        })
+        previous_block = self.get_previous_block()
+        return previous_block['index'] + 1
+
+# Определение класса для цифрового гражданства
+class DigitalCitizenship:
+    def __init__(self, citizen_id):
+        self.citizen_id = citizen_id
+        self.status = 'User'
+        self.additional_status = []
+
+    def upgrade_status(self, new_status):
+        self.status = new_status
+
+    def add_additional_status(self, status):
+        self.additional_status.append(status)
+
+# Определение класса для управления
+class Governance:
+    def __init__(self):
+        self.governors = []
+
+    def add_governor(self, governor):
+        self.governors.append(governor)
+
+# Создание экземпляров классов
+blockchain = Blockchain()
+governance = Governance()
+citizen1 = DigitalCitizenship('12345')
+
+# Пример использования
+blockchain.add_transaction('user1', 'user2', 10)
+blockchain.add_transaction('user2', 'user3', 5)
+proof = blockchain.proof_of_work(blockchain.get_previous_block()['proof'])
+previous_hash = hashlib.sha256(json.dumps(blockchain.get_previous_block(), sort_keys=True).encode()).hexdigest()
+blockchain.create_block(proof, previous_hash)
+
+citizen1.upgrade_status('Citizen')
+governance.add_governor(citizen1)
+
+print(blockchain.chain)
+print(governance.governors)
