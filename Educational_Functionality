@@ -1,0 +1,45 @@
+// app/app.go
+// ...
+
+// Транзакция для создания образовательной задачи
+type CreateEducationalTaskTx struct {
+	Creator sdk.AccAddress
+	Task    string
+	Reward  sdk.Coin
+}
+
+func NewCreateEducationalTaskTx(creator sdk.AccAddress, task string, reward sdk.Coin) CreateEducationalTaskTx {
+	return CreateEducationalTaskTx{
+		Creator: creator,
+		Task:    task,
+		Reward:  reward,
+	}
+}
+
+func (tx CreateEducationalTaskTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx CreateEducationalTaskTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx CreateEducationalTaskTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Creator}
+}
+
+// Обработчик транзакции для создания образовательной задачи
+func handleCreateEducationalTask(ctx sdk.Context, keeper education.Keeper, tx CreateEducationalTaskTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Создание образовательной задачи с помощью Keeper модуля образования
+	err := keeper.CreateEducationalTask(ctx, tx.Creator, tx.Task, tx.Reward)
+	if err != nil {
+		return sdk.ErrInternal("unable to create educational task").Result()
+	}
+
+	return sdk.Result{}
+}
