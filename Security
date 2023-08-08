@@ -1,0 +1,41 @@
+// app/app.go
+// ...
+
+// Транзакция для добавления нового Validatorа
+type AddValidatorTx struct {
+	Validator sdk.AccAddress
+}
+
+func NewAddValidatorTx(validator sdk.AccAddress) AddValidatorTx {
+	return AddValidatorTx{
+		Validator: validator,
+	}
+}
+
+func (tx AddValidatorTx) ValidateBasic() error {
+	// Валидация транзакции
+	// ...
+}
+
+func (tx AddValidatorTx) GetSignBytes() []byte {
+	// Получение байт для подписи
+	// ...
+}
+
+func (tx AddValidatorTx) GetSigners() []sdk.AccAddress {
+	return []sdk.AccAddress{tx.Validator}
+}
+
+// Обработчик транзакции для добавления нового Validatorа
+func handleAddValidator(ctx sdk.Context, keeper validator.Keeper, tx AddValidatorTx) sdk.Result {
+	// Проверки и логика для обработки транзакции
+	// ...
+
+	// Добавление нового Validatorа с помощью Keeper модуля Validatorов
+	err := keeper.AddValidator(ctx, tx.Validator)
+	if err != nil {
+		return sdk.ErrInternal("unable to add validator").Result()
+	}
+
+	return sdk.Result{}
+}
