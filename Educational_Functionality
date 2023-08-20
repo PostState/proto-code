@@ -2,6 +2,8 @@
 // ...
 
 // Транзакция для создания образовательной задачи
+// Transaction to create an educational task
+// Transacción para crear una tarea educativa
 type CreateEducationalTaskTx struct {
 	Creator sdk.AccAddress
 	Task    string
@@ -31,6 +33,8 @@ func (tx CreateEducationalTaskTx) GetSigners() []sdk.AccAddress {
 }
 
 // Обработчик транзакции для создания образовательной задачи
+// Transaction Handler for Creating an Education Task
+// Controlador de transacciones para crear una tarea educativa
 func handleCreateEducationalTask(ctx sdk.Context, keeper education.Keeper, tx CreateEducationalTaskTx) sdk.Result {
 	// Проверки и логика для обработки транзакции
 	// ...
