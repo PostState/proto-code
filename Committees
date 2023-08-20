@@ -2,6 +2,8 @@
 // ...
 
 // Транзакция для создания комитета
+// Transaction to create a committee
+// Transacción para crear un comité
 type CreateCommitteeTx struct {
 	Creator sdk.AccAddress
 	Members []sdk.AccAddress
@@ -29,6 +31,8 @@ func (tx CreateCommitteeTx) GetSigners() []sdk.AccAddress {
 }
 
 // Обработчик транзакции для создания комитета
+// Transaction handler to create a committee
+// Controlador de transacciones para crear un comité
 func handleCreateCommittee(ctx sdk.Context, keeper committee.Keeper, tx CreateCommitteeTx) sdk.Result {
 	// Проверки и логика для обработки транзакции
 	// ...
