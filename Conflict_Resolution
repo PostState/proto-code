@@ -2,6 +2,8 @@
 // ...
 
 // Транзакция для инициирования разрешения спора через децентрализованный арбитражный суд
+// Transaction to initiate dispute resolution through a decentralized arbitration court
+// Transacción para iniciar la resolución de disputas a través de un tribunal de arbitraje descentralizado
 type InitiateDisputeResolutionTx struct {
 	Initiator sdk.AccAddress
 	CounterParty sdk.AccAddress
@@ -29,6 +31,8 @@ func (tx InitiateDisputeResolutionTx) GetSigners() []sdk.AccAddress {
 }
 
 // Обработчик транзакции для инициирования разрешения спора
+// Transaction handler to initiate dispute resolution
+// Manejador de transacciones para iniciar la resolución de disputas
 func handleInitiateDisputeResolution(ctx sdk.Context, keeper arbitration.Keeper, tx InitiateDisputeResolutionTx) sdk.Result {
 	// Проверки и логика для обработки транзакции
 	// ...
